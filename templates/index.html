@@ -11,13 +11,35 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
 
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-analytics.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyDCchjyg5P76Soy84jccVV8fGPfHmEKm7M",
+      authDomain: "weather-monitor-2019.firebaseapp.com",
+      databaseURL: "https://weather-monitor-2019.firebaseio.com",
+      projectId: "weather-monitor-2019",
+      storageBucket: "weather-monitor-2019.appspot.com",
+      messagingSenderId: "967110868353",
+      appId: "1:967110868353:web:0d577fdf28c75815b67c80",
+      measurementId: "G-ENYZ2TP8RV"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 <div class="container" id="content">
     <div class="row">
-        <h3>CPU Chart </h3>
+        <h3>Temp Chart </h3>
         <canvas id="myChart" width="600" height="400"></canvas>
-        <div id="log">
-        </div> <!-- /#log -->
+        <!-- <div id="log">
+        </div> -->
     </div>
 </div>
 

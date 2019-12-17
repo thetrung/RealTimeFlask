@@ -5,7 +5,6 @@ $(document).ready(function(){
     var numbers_received = [];
     var numbers_labels = [];
 
-
     // Global parameters:
     // do not resize the chart canvas when its container does (keep at 600x400px)
     Chart.defaults.global.responsive = true;
@@ -41,42 +40,29 @@ $(document).ready(function(){
     }
 
     // create the chart using the chart canvas
-    var myChart = new Chart(ctx, {
-    type: 'line',
-    data: chartData,
+    var lineChart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
     });
+    // Avoid re-animate the chart on updating data.
+    lineChart.options.duration = 0;
 
-    myChart.options.duration = 0;
-
-
-    function update_chart(chart, labels, data) {
-      chart.data.labels = labels;
-      chart.data.datasets.data = data;
-      chart.update();
-    }
     //receive details from server
     socket.on('newnumber', function(msg) {
-        console.log("Received number" + msg.number);
+        // Log
+        console.log("Received number :" + msg.number + " -- label :" + msg.label);
+
         //maintain a list of ten numbers
         if (numbers_received.length >= 50){
-            numbers_received.shift();
             numbers_labels.shift();
+            numbers_received.shift();
         }
+        numbers_labels.push(msg.label);
         numbers_received.push(msg.number);
-        numbers_labels.push('#' + msg.number);
 
-        numbers_string = '';
-        for (var i = 0; i < numbers_received.length; i++){
-            // numbers_labels.push(i);
-            numbers_string = numbers_string + '<p>' + numbers_received[i].toString() + '</p>';
-        }
+        lineChart.data.labels = numbers_labels;
+        lineChart.data.datasets.data = numbers_received;
 
-        update_chart(myChart, numbers_labels, numbers_received)
-        $('#log').html(numbers_string);
-
-
+        lineChart.update();
     });
-
-
-
 });
