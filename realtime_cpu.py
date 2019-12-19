@@ -57,6 +57,7 @@ def fetch_data():
     for val in data:
         print(val)
         socketio.emit('newnumber', {'number': data[val], 'label': val}, namespace='/test')
+        socketio.sleep(0.5)
 
 
     print("Update per minutue...")
