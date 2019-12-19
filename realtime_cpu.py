@@ -2,9 +2,14 @@
 # Start with a basic flask app webpage.
 from flask_socketio import SocketIO, emit
 from flask import Flask, render_template, url_for, copy_current_request_context
+
 from random import random
+
+import os
+
 from time import sleep
 from threading import Thread, Event
+
 
 import firebase_admin
 from firebase_admin import credentials
@@ -87,4 +92,6 @@ def test_disconnect():
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 5000))
+    socketio.run(app, host='0.0.0.0', port=port)
