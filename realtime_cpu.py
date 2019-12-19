@@ -20,13 +20,13 @@ app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
 
 #turn the flask app into a socketio app
-socketio = SocketIO(app, async_mode=None, logger=True, engineio_logger=True)
+socketio = SocketIO(app, async_mode=None, ping_timeout=10, logger=True, engineio_logger=True)
 
 #random number Generator Thread
 thread = Thread()
 thread_stop_event = Event()
 
-def fetch_data():
+def init_firebase():
     cred = credentials.Certificate("static/weather-monitor-2019-firebase-adminsdk-dm8wu-c0f1c07493.json")
 
     # Initialize the app with a service account, granting admin privileges
@@ -35,6 +35,7 @@ def fetch_data():
     })
     print(init_app.name)
 
+def fetch_data():
     user = "ANKhM4ZhhAeOjKGu6SB3FTU6rFt2"
     device = "224e7159-3dc7-4eb9-bf0d-e2c0446e7f48"
     mode = "/Temp/Data"
@@ -58,6 +59,8 @@ def fetch_data():
         print(val)
         socketio.emit('newnumber', {'number': data[val], 'label': val}, namespace='/test')
         socketio.sleep(0.5)
+        if thread_stop_event.isSet():
+            break
 
 
     print("Update per minutue...")
@@ -85,14 +88,17 @@ def test_connect():
     #Start the random number generator thread only if the thread has not been started before.
     if not thread.isAlive():
         print("Starting Thread")
+        thread_stop_event.clear()
         thread = socketio.start_background_task(fetch_data)
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
+    thread_stop_event.set()
     print('Client disconnected')
 
 
 if __name__ == '__main__':
+    init_firebase()
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
     socketio.run(app, host='0.0.0.0', port=port)
