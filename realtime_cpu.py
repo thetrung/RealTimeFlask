@@ -33,40 +33,37 @@ def fetch_data():
     user = "ANKhM4ZhhAeOjKGu6SB3FTU6rFt2"
     device = "224e7159-3dc7-4eb9-bf0d-e2c0446e7f48"
     mode = "/Temp/Data"
-    date = "/18-10-2019"
+    date = "/19-12-2019"
 
     # As an admin, the app has access to read and write all data, regradless of Security Rules
     ref = db.reference('/users/' + user + '/GetWay/' + device + mode + date)
     # print(ref.get())
 
-    data = ref.get()
+    print("Fetching data from server...")
 
-    # for day in data.values() :
-    #     print(day)
-    has_new_value = True
+    # ---
+    # Have to add those queries before get()
+    # limit_to_last() have to be after order_by_key()
+    # --
+    data = ref.order_by_key().limit_to_last(50).get()
 
-    # while not thread_stop_event.isSet():
+    print("Sending 1st Batch...")
+
     for val in data:
         print(val)
         socketio.emit('newnumber', {'number': data[val], 'label': val}, namespace='/test')
-        socketio.sleep(1)
+
+
+    print("Update per minutue...")
+
+    while not thread_stop_event.isSet():
+        data = ref.order_by_key().limit_to_last(1).get()
+        for val in data:
+            print(val)
+            socketio.emit('newnumber', {'number': data[val], 'label': val}, namespace='/test')
+            socketio.sleep(60)
     # print(data.values)
     # print(data)
-
-
-def randomNumberGenerator():
-    """
-    Generate a random number every 1 second and emit to a socketio instance (broadcast)
-    Ideally to be run in a separate thread?
-    """
-    #infinite loop of magical random numbers
-    print("Making random numbers")
-    while not thread_stop_event.isSet():
-        number = round(random()*10, 3)
-        print(number)
-        socketio.emit('newnumber', {'number': number}, namespace='/test')
-        socketio.sleep(1)
-
 
 @app.route('/')
 def index():
