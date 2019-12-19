@@ -38,7 +38,7 @@ def fetch_data():
     user = "ANKhM4ZhhAeOjKGu6SB3FTU6rFt2"
     device = "224e7159-3dc7-4eb9-bf0d-e2c0446e7f48"
     mode = "/Temp/Data"
-    date = "/19-12-2019"
+    date = "/20-12-2019"
 
     # As an admin, the app has access to read and write all data, regradless of Security Rules
     ref = db.reference('/users/' + user + '/GetWay/' + device + mode + date)
