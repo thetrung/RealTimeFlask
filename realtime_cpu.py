@@ -70,9 +70,8 @@ def fetch_data():
         for val in data:
             print(val)
             socketio.emit('newnumber', {'number': data[val], 'label': val}, namespace='/test')
-            socketio.sleep(60)
-    # print(data.values)
-    # print(data)
+
+        socketio.sleep(60)
 
 @app.route('/')
 def index():
