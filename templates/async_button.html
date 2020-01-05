@@ -1,0 +1,21 @@
+<div id="test_async" class="row">
+    <button onclick="test_get_async()">GET Async</button>
+    <button onclick="test_post_async()">POST Async</button>
+    <script>
+    // Making url
+    let base_url = 'http://' + document.domain + ':' + location.port
+    
+    // Test
+    test_get_async = () => {
+        // GET => Return Promises<fullfilled>
+        fetchAsync(base_url + '/test_get_async', content =>{ print(content) })
+    }
+
+    test_post_async = () => {
+        // POST => Return Promises<fullfilled>
+        sendAsync(base_url + '/test_post_async', 
+            { data: 'Server got my message !' }, 
+            content =>{ print(content) })
+    }
+    </script>
+</div>

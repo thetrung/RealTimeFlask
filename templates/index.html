@@ -6,6 +6,7 @@
 
     <!-- for static scripts  -->
     <script src='static/js/Chart.min.js'></script>
+    <script src='static/js/async.js'></script>
     <script src="static/js/application.js"></script>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -38,9 +39,8 @@
     <div class="row">
         <h3>Temp Chart </h3>
         <canvas id="myChart" width="600" height="400"></canvas>
-        <!-- <div id="log">
-        </div> -->
     </div>
+    {% include 'async_button.html' %}
 </div>
 
 

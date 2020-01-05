@@ -1,11 +1,12 @@
 
 # Start with a basic flask app webpage.
 from flask_socketio import SocketIO, emit
-from flask import Flask, render_template, url_for, copy_current_request_context
+from flask import Flask, render_template, url_for, copy_current_request_context, request
 
 from random import random
 
 import os
+import json
 
 from time import sleep
 from threading import Thread, Event
@@ -72,6 +73,19 @@ def fetch_data():
             socketio.emit('newnumber', {'number': data[val], 'label': val}, namespace='/test')
 
         socketio.sleep(60)
+
+@app.route('/test_get_async')
+def test_fetch_get():
+    data = {'data': 'Server sent this to me.'}
+    # print(data)
+    return json.dumps(data)
+
+
+@app.route('/test_post_async',methods=['POST'])
+def test_fetch_post():
+    result = request.get_json()
+    print('got data: {}'.format(result))
+    return json.dumps(result)
 
 @app.route('/')
 def index():
